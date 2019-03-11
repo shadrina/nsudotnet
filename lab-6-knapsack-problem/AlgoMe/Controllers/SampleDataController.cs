@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AlgoMe.Models;
 using AlgoMe.Models.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +10,6 @@ namespace AlgoMe.Controllers {
         
         private readonly IDataRepository<Parameter> _parameterRepository;
         private readonly IDataRepository<Request> _requestRepository;
-        
-        private static string[] Summaries = {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         public SampleDataController(IDataRepository<Parameter> parameterRepository, IDataRepository<Request> requestRepository) {
             _parameterRepository = parameterRepository;
@@ -23,23 +17,13 @@ namespace AlgoMe.Controllers {
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<WeatherForecast> WeatherForecasts() {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast {
-                DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            });
+        public IEnumerable<Request> Requests() {
+            return _requestRepository.GetAll();
         }
 
-        public class WeatherForecast {
-            public string DateFormatted { get; set; }
-            public int TemperatureC { get; set; }
-            public string Summary { get; set; }
-
-            public int TemperatureF {
-                get { return 32 + (int) (TemperatureC / 0.5556); }
-            }
+        [HttpDelete("[action]")]
+        public void DeleteRequest([FromBody] long id) {
+            _requestRepository.Delete(_requestRepository.Get(id));
         }
     }
 }
