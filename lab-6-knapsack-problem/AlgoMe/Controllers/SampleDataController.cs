@@ -2,14 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AlgoMe.Models;
+using AlgoMe.Models.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlgoMe.Controllers {
     [Route("api/[controller]")]
     public class SampleDataController : Controller {
+        
+        private readonly IDataRepository<Parameter> _parameterRepository;
+        private readonly IDataRepository<Request> _requestRepository;
+        
         private static string[] Summaries = {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+
+        public SampleDataController(IDataRepository<Parameter> parameterRepository, IDataRepository<Request> requestRepository) {
+            _parameterRepository = parameterRepository;
+            _requestRepository = requestRepository;
+        }
 
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecasts() {
