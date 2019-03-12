@@ -58,14 +58,15 @@ export class RequestList extends Component {
               <td>{request.name}</td>
               <td>{request.capacity}</td>
               <td>{request.answer}</td>
-              <td>{request.percentage}</td>
+              <td>{request.percentage + " %"}</td>
               <td>{request.status ? "Выполнено" : "В процессе"}</td>
               <td>
                 <button type="button" className="btn btn-danger" onClick={_ => this.onDeleteButtonClicked(request.requestId)}>
                   Удалить
                 </button>
               </td>
-              <td><button type="button" className="btn btn-primary">Новая задача</button>
+              <td>
+                <button type="button" className="btn btn-primary">Новая задача</button>
               </td>
             </tr>
           )}

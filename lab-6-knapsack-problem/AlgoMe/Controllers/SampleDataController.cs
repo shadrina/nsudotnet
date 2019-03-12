@@ -25,5 +25,10 @@ namespace AlgoMe.Controllers {
         public void DeleteRequest([FromBody] long id) {
             _requestRepository.Delete(_requestRepository.Get(id));
         }
+        
+        [HttpPost("[action]")]
+        public void PostRequest([FromBody] Request request) {
+            _requestRepository.Add(request);
+        }
     }
 }
