@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export class NewRequestForm extends Component {
   static displayName = NewRequestForm.name;
@@ -66,6 +67,13 @@ export class NewRequestForm extends Component {
 
   onSubmit() {
     console.log(this.state);
+    axios.post('/api/SampleData/PostRequest', this.state)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   render () {

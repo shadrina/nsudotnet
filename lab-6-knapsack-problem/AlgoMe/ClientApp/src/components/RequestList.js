@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export class RequestList extends Component {
   static displayName = RequestList.name;
@@ -18,7 +19,7 @@ export class RequestList extends Component {
   }
 
   updateTable() {
-    fetch('api/SampleData/Requests')
+    axios.get('api/SampleData/Requests')
       .then(response => response.json())
       .then(data => {
         this.setState({ requests: data, loading: false });
