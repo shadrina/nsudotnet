@@ -41,5 +41,9 @@ namespace AlgoMe.Models.DataManager {
             _algomeContext.Requests.Remove(request);
             _algomeContext.SaveChanges();
         }
+
+        public void DeleteAll(ICollection<Request> entities) {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -20,9 +20,8 @@ export class RequestList extends Component {
 
   updateTable() {
     axios.get('api/SampleData/Requests')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ requests: data, loading: false });
+      .then(response => {
+        this.setState({ requests: response.data, loading: false });
       })
       .catch(error => console.error(error));
   }

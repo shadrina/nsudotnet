@@ -8,5 +8,6 @@ namespace AlgoMe.Models.Repository {
         void Add(TEntity entity);
         void Update(TEntity dbEntity, TEntity entity);
         void Delete(TEntity entity);
+        void DeleteAll(ICollection<TEntity> entities);
     }
 }

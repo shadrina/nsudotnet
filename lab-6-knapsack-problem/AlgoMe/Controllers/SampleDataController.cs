@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AlgoMe.Models;
 using AlgoMe.Models.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,11 @@ namespace AlgoMe.Controllers {
 
         [HttpDelete("[action]")]
         public void DeleteRequest([FromBody] long id) {
-            _requestRepository.Delete(_requestRepository.Get(id));
+            var toDelete = _requestRepository.Get(id);
+            if (toDelete != null) {
+                _parameterRepository.DeleteAll(toDelete.Parameters);
+                _requestRepository.Delete(toDelete);
+            }
         }
         
         [HttpPost("[action]")]

@@ -37,5 +37,9 @@ namespace AlgoMe.Models.DataManager {
             _algomeContext.Parameters.Remove(parameter);
             _algomeContext.SaveChanges();
         }
+
+        public void DeleteAll(ICollection<Parameter> entities) {
+            throw new System.NotImplementedException();
+        }
     }
 }
