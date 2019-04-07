@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace AlgoMe.Models.Repository {
     public interface IDataRepository<TEntity>
@@ -7,7 +9,6 @@ namespace AlgoMe.Models.Repository {
         TEntity Get(long id);
         void Add(TEntity entity);
         void Update(TEntity dbEntity, TEntity entity);
-        void Delete(TEntity entity);
-        void DeleteAll(ICollection<TEntity> entities);
+        void Delete(Expression<Func<TEntity, bool>> predicate);
     }
 }

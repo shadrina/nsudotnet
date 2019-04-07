@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using AlgoMe.Models.Repository;
 
 namespace AlgoMe.Models.DataManager {
@@ -11,11 +14,12 @@ namespace AlgoMe.Models.DataManager {
         }
  
         public IEnumerable<Request> GetAll() {
-            return _algomeContext.Requests.ToList();
+            return _algomeContext.Requests.Include(r => r.Parameters).ToList();
         }
  
         public Request Get(long id) {
             return _algomeContext.Requests
+                .Include(r => r.Parameters)
                 .FirstOrDefault(e => e.RequestId == id);
         }
  
@@ -37,13 +41,9 @@ namespace AlgoMe.Models.DataManager {
             _algomeContext.SaveChanges();
         }
  
-        public void Delete(Request request) {
-            _algomeContext.Requests.Remove(request);
+        public void Delete(Expression<Func<Request, bool>> predicate) {
+            _algomeContext.Requests.RemoveRange(_algomeContext.Requests.Where(predicate));
             _algomeContext.SaveChanges();
-        }
-
-        public void DeleteAll(ICollection<Request> entities) {
-            throw new System.NotImplementedException();
         }
     }
 }

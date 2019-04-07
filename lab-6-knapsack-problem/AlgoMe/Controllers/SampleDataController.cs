@@ -25,10 +25,9 @@ namespace AlgoMe.Controllers {
         [HttpDelete("[action]")]
         public void DeleteRequest([FromBody] long id) {
             var toDelete = _requestRepository.Get(id);
-            if (toDelete != null) {
-                _parameterRepository.DeleteAll(toDelete.Parameters);
-                _requestRepository.Delete(toDelete);
-            }
+            if (toDelete == null) return;
+            _parameterRepository.Delete(p => p.Request.RequestId == id);
+            _requestRepository.Delete(r => r.RequestId == id);
         }
         
         [HttpPost("[action]")]
