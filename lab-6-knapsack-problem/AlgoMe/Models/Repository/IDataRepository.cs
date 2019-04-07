@@ -9,6 +9,6 @@ namespace AlgoMe.Models.Repository {
         TEntity Get(long id);
         void Add(TEntity entity);
         void Update(TEntity dbEntity, TEntity entity);
-        void Delete(Expression<Func<TEntity, bool>> predicate);
+        void DeleteWhere(Expression<Func<TEntity, bool>> predicate);
     }
 }

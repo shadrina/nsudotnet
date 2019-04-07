@@ -7,7 +7,7 @@ using AlgoMe.Models.Repository;
 
 namespace AlgoMe.Models.DataManager {
     public class RequestManager : IDataRepository<Request> {
-        readonly AlgoMeContext _algomeContext;
+        private readonly AlgoMeContext _algomeContext;
  
         public RequestManager(AlgoMeContext context) {
             _algomeContext = context;
@@ -41,7 +41,7 @@ namespace AlgoMe.Models.DataManager {
             _algomeContext.SaveChanges();
         }
  
-        public void Delete(Expression<Func<Request, bool>> predicate) {
+        public void DeleteWhere(Expression<Func<Request, bool>> predicate) {
             _algomeContext.Requests.RemoveRange(_algomeContext.Requests.Where(predicate));
             _algomeContext.SaveChanges();
         }
