@@ -7,6 +7,7 @@ namespace AlgoMe.Models.Repository {
     {
         IEnumerable<TEntity> GetAll();
         TEntity Get(long id);
+        TEntity GetWhere(Expression<Func<TEntity, bool>> predicate);
         void Add(TEntity entity);
         void Update(TEntity dbEntity, TEntity entity);
         void DeleteWhere(Expression<Func<TEntity, bool>> predicate);

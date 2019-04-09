@@ -22,7 +22,11 @@ namespace AlgoMe.Models.DataManager {
                 .Include(p => p.Request)
                 .FirstOrDefault(e => e.ParameterId == id);
         }
- 
+
+        public Parameter GetWhere(Expression<Func<Parameter, bool>> predicate) {
+            return _algomeContext.Parameters.Include(p => p.Request).FirstOrDefault(predicate);
+        }
+
         public void Add(Parameter entity) {
             _algomeContext.Parameters.Add(entity);
             _algomeContext.SaveChanges();

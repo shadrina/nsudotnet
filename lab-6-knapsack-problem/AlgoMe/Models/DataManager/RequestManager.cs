@@ -7,7 +7,7 @@ using AlgoMe.Models.Repository;
 
 namespace AlgoMe.Models.DataManager {
     public class RequestManager : IDataRepository<Request> {
-        private readonly AlgoMeContext _algomeContext;
+        private AlgoMeContext _algomeContext;
  
         public RequestManager(AlgoMeContext context) {
             _algomeContext = context;
@@ -22,7 +22,11 @@ namespace AlgoMe.Models.DataManager {
                 .Include(r => r.Parameters)
                 .FirstOrDefault(e => e.RequestId == id);
         }
- 
+
+        public Request GetWhere(Expression<Func<Request, bool>> predicate) {
+            return _algomeContext.Requests.Include(r => r.Parameters).FirstOrDefault(predicate);
+        }
+
         public void Add(Request entity) {
             _algomeContext.Requests.Add(entity);
             _algomeContext.SaveChanges();
