@@ -4,8 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace AlgoMe.Models.Repository {
-    public interface IDataRepository<TEntity> : IDisposable
-    {
+    public interface IDataRepository<TEntity> : IDisposable {
         Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity> Get(long id);
         Task<TEntity> GetWhere(Expression<Func<TEntity, bool>> predicate);

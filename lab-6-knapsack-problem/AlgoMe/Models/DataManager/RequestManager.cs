@@ -43,7 +43,6 @@ namespace AlgoMe.Models.DataManager {
             request.Answer = entity.Answer;
             request.Status = entity.Status;
             request.Capacity = entity.Capacity;
-            request.Parameters = entity.Parameters;
             request.Percentage = entity.Percentage;
             request.FullAnswer = entity.FullAnswer;
             request.ProcessTime = entity.ProcessTime;
