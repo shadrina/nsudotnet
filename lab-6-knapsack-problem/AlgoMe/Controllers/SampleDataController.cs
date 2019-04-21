@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using AlgoMe.Models;
 using AlgoMe.Models.DataManager;
@@ -17,10 +14,13 @@ namespace AlgoMe.Controllers {
         private readonly IDataRepository<Parameter> _parameterRepository;
         private readonly IDataRepository<Request> _requestRepository;
         
-        private readonly DbContextOptionsBuilder<AlgoMeContext> _optionsBuilder = new DbContextOptionsBuilder<AlgoMeContext>();
+        private readonly DbContextOptionsBuilder<AlgoMeContext> _optionsBuilder 
+            = new DbContextOptionsBuilder<AlgoMeContext>();
         
 
-        public SampleDataController(IDataRepository<Parameter> parameterRepository, IDataRepository<Request> requestRepository) {
+        public SampleDataController(
+            IDataRepository<Parameter> parameterRepository, 
+            IDataRepository<Request> requestRepository) {
             _parameterRepository = parameterRepository;
             _requestRepository = requestRepository;
             _optionsBuilder.UseNpgsql(
@@ -53,14 +53,16 @@ namespace AlgoMe.Controllers {
             // TODO: The direct use of DbContext here is a patch
             // TODO: It spoils the idea of using repository in controller
             // Btw it works ¯\_(ツ)_/¯
-            using(var context = new AlgoMeContext(_optionsBuilder.Options)) {
+            using (var context = new AlgoMeContext(_optionsBuilder.Options)) {
                 var requestRepository = new RequestManager(context);
                 var realR = await requestRepository.Get(request.RequestId);
             
                 var items = request.Parameters.Select(p => new Algorithm.Item {Value = p.Price, Weight = p.Weight}).ToArray();
                 var answer = Algorithm.Knapsack(items, request.Capacity);
-                request.Answer = answer;
+                
                 request.Status = true;
+                request.Answer = answer;
+                request.Percentage = 100;
                 await requestRepository.Update(realR, request);
             }
         }
