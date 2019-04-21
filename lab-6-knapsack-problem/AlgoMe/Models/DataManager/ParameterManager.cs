@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AlgoMe.Models.Repository;
 
 namespace AlgoMe.Models.DataManager {
@@ -13,37 +14,47 @@ namespace AlgoMe.Models.DataManager {
             _algomeContext = context;
         }
  
-        public IEnumerable<Parameter> GetAll() {
-            return _algomeContext.Parameters.Include(p => p.Request).ToList();
-        }
- 
-        public Parameter Get(long id) {
-            return _algomeContext.Parameters
+        public async Task<IEnumerable<Parameter>> GetAll() {
+            return await _algomeContext.Parameters
                 .Include(p => p.Request)
-                .FirstOrDefault(e => e.ParameterId == id);
-        }
-
-        public Parameter GetWhere(Expression<Func<Parameter, bool>> predicate) {
-            return _algomeContext.Parameters.Include(p => p.Request).FirstOrDefault(predicate);
-        }
-
-        public void Add(Parameter entity) {
-            _algomeContext.Parameters.Add(entity);
-            _algomeContext.SaveChanges();
+                .ToListAsync();
         }
  
-        public void Update(Parameter parameter, Parameter entity) {
+        public async Task<Parameter> Get(long id) {
+            return await _algomeContext.Parameters
+                .Include(p => p.Request)
+                .FirstOrDefaultAsync(e => e.ParameterId == id);
+        }
+
+        public async Task<Parameter> GetWhere(Expression<Func<Parameter, bool>> predicate) {
+            return await _algomeContext.Parameters
+                .Include(p => p.Request)
+                .FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task Add(Parameter entity) {
+            _algomeContext.Parameters.Add(entity);
+            
+            await _algomeContext.SaveChangesAsync();
+        }
+ 
+        public async Task Update(Parameter parameter, Parameter entity) {
             parameter.Name = entity.Name;
             parameter.Price = entity.Price;
             parameter.Weight = entity.Weight;
             parameter.Request = entity.Request;
  
-            _algomeContext.SaveChanges();
+            await _algomeContext.SaveChangesAsync();
         }
  
-        public void DeleteWhere(Expression<Func<Parameter, bool>> predicate) {
+        public async Task DeleteWhere(Expression<Func<Parameter, bool>> predicate) {
             _algomeContext.Parameters.RemoveRange(_algomeContext.Parameters.Where(predicate));
-            _algomeContext.SaveChanges();
+            
+            await _algomeContext.SaveChangesAsync();
+        }
+
+        public void Dispose() {
+            _algomeContext?.Dispose();
         }
     }
 }

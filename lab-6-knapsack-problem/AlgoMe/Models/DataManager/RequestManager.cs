@@ -1,38 +1,44 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AlgoMe.Models.Repository;
 
 namespace AlgoMe.Models.DataManager {
     public class RequestManager : IDataRepository<Request> {
-        private AlgoMeContext _algomeContext;
+        private readonly AlgoMeContext _algomeContext;
  
         public RequestManager(AlgoMeContext context) {
             _algomeContext = context;
         }
  
-        public IEnumerable<Request> GetAll() {
-            return _algomeContext.Requests.Include(r => r.Parameters).ToList();
-        }
- 
-        public Request Get(long id) {
-            return _algomeContext.Requests
+        public async Task<IEnumerable<Request>> GetAll() {
+            return await _algomeContext.Requests
                 .Include(r => r.Parameters)
-                .FirstOrDefault(e => e.RequestId == id);
-        }
-
-        public Request GetWhere(Expression<Func<Request, bool>> predicate) {
-            return _algomeContext.Requests.Include(r => r.Parameters).FirstOrDefault(predicate);
-        }
-
-        public void Add(Request entity) {
-            _algomeContext.Requests.Add(entity);
-            _algomeContext.SaveChanges();
+                .ToListAsync();
         }
  
-        public void Update(Request request, Request entity) {
+        public async Task<Request> Get(long id) {
+            return await _algomeContext.Requests
+                .Include(r => r.Parameters)
+                .SingleOrDefaultAsync(e => e.RequestId == id);
+        }
+
+        public async Task<Request> GetWhere(Expression<Func<Request, bool>> predicate) {
+            return await _algomeContext.Requests
+                .Include(r => r.Parameters)
+                .SingleOrDefaultAsync(predicate);
+        }
+
+        public async Task Add(Request entity) {
+            await _algomeContext.Requests.AddAsync(entity);
+            
+            await _algomeContext.SaveChangesAsync();
+        }
+ 
+        public async Task Update(Request request, Request entity) {
             request.Name = entity.Name;
             request.Answer = entity.Answer;
             request.Status = entity.Status;
@@ -42,12 +48,17 @@ namespace AlgoMe.Models.DataManager {
             request.FullAnswer = entity.FullAnswer;
             request.ProcessTime = entity.ProcessTime;
  
-            _algomeContext.SaveChanges();
+            await _algomeContext.SaveChangesAsync();
         }
  
-        public void DeleteWhere(Expression<Func<Request, bool>> predicate) {
+        public async Task DeleteWhere(Expression<Func<Request, bool>> predicate) {
             _algomeContext.Requests.RemoveRange(_algomeContext.Requests.Where(predicate));
-            _algomeContext.SaveChanges();
+            
+            await _algomeContext.SaveChangesAsync();
+        }
+
+        public void Dispose() {
+            _algomeContext?.Dispose();
         }
     }
 }
