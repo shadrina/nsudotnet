@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
-import { InputFormRow } from '../InputFormRow.js'
+import { SignUpModal } from "../modals/SignUpModal";
+import {SignInModal} from "../modals/SignInModal";
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -14,11 +15,19 @@ export class NavMenu extends Component {
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.toggleSignIn = this.toggleSignIn.bind(this);
     this.toggleSignUp = this.toggleSignUp.bind(this);
+    this.toggleDropDown = this.toggleDropDown.bind(this);
     this.state = {
       collapsed: true,
       siModal: false,
-      suModal: false
+      suModal: false,
+      dropdownOpen: false,
     };
+  }
+
+  toggleDropDown() {
+      this.setState(prevState => ({
+          dropdownOpen: !prevState.dropdownOpen
+      }));
   }
 
   toggleNavbar () {
@@ -40,33 +49,13 @@ export class NavMenu extends Component {
 
     renderSignInModal() {
         return (
-            <Modal isOpen={this.state.siModal} toggle={this.toggleSignIn} className={this.props.className}>
-                <ModalHeader toggle={this.toggleSignIn}>Sign In</ModalHeader>
-                <ModalBody>
-                    <InputFormRow label="Login" type="text"/>
-                    <InputFormRow label="Password" type="password"/>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={this.toggleSignIn}>Sign In</Button>{' '}
-                    <Button color="secondary" onClick={this.toggleSignIn}>Cancel</Button>
-                </ModalFooter>
-            </Modal>
+            <SignInModal isOpen={this.state.siModal} toggle={this.toggleSignIn} />
         )
     }
 
     renderSignUpModal() {
         return (
-            <Modal isOpen={this.state.suModal} toggle={this.toggleSignUp} className={this.props.className}>
-                <ModalHeader toggle={this.toggleSignUp}>Sign Up</ModalHeader>
-                <ModalBody>
-                    <InputFormRow label="Login" type="text"/>
-                    <InputFormRow label="Password" type="password"/>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={this.toggleSignUp}>Sign Up</Button>{' '}
-                    <Button color="secondary" onClick={this.toggleSignUp}>Cancel</Button>
-                </ModalFooter>
-            </Modal>
+            <SignUpModal isOpen={this.state.suModal} toggle={this.toggleSignUp} />
         )
     }
 
@@ -81,22 +70,28 @@ export class NavMenu extends Component {
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">Привет!</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/new-request">Новая задача</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/counter">Новая задача</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/request-list">Список выполняющихся задач</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/fetch-data">Список выполняющихся задач</NavLink>
+                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
+                        <DropdownToggle color="light" caret>
+                            Авторизация
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem>
+                                {siModal && this.renderSignInModal()}
+                                <NavLink href="#" tag={Link} className="text-dark" to="/login" onClick={this.toggleSignIn}>Войти</NavLink>
+                            </DropdownItem>
+                            <DropdownItem>
+                                {suModal && this.renderSignUpModal()}
+                                <NavLink href="#" tag={Link} className="text-dark" to="/registration" onClick={this.toggleSignUp}>Зарегистрироваться</NavLink>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 </NavItem>
-                  <NavItem>
-                      {siModal && this.renderSignInModal()}
-                      <NavLink href="#" tag={Link} className="text-dark" to="/login" onClick={this.toggleSignIn}>Sign in</NavLink>
-                  </NavItem>
-                  <NavItem>
-                      {suModal && this.renderSignUpModal()}
-                      <NavLink href="#" tag={Link} className="text-dark" to="/registration" onClick={this.toggleSignUp}>Sign up</NavLink>
-                  </NavItem>
               </ul>
             </Collapse>
           </Container>
