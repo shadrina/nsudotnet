@@ -1,8 +1,7 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AlgoMe.Models;
-using AlgoMe.Models.DataManager;
 using AlgoMe.Models.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +26,11 @@ namespace AlgoMe.Controllers {
                 "User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=algome;Pooling=true;",
                 b => b.MigrationsAssembly("AlgoMe")
                 );
+        }
+        
+        [HttpPost("[action]")]
+        public async Task<ActionResult> SignInRequest(Object _) {
+            return Ok();
         }
 
         [HttpGet("[action]")]
