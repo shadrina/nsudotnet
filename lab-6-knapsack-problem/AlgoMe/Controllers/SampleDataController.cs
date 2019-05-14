@@ -49,22 +49,18 @@ namespace AlgoMe.Controllers {
             await Task.Run(() => ProcessRequest(request));
         }
         
+        [HttpPost("[action]")]
+        public async Task<ActionResult> RenewRequest([FromBody] long id) {
+            var toRenew = await _requestRepository.Get(id);
+            if (toRenew == null) return BadRequest();
+            toRenew.Answer = 0;
+            toRenew.Status = false;
+            await Task.Run(() => ProcessRequest(toRenew));
+            return Ok();
+        }
+        
         private async void ProcessRequest(Request request) {
-            // TODO: The direct use of DbContext here is a patch
-            // TODO: It spoils the idea of using repository in controller
-            // Btw it works ¯\_(ツ)_/¯
-            using (var context = new AlgoMeContext(_optionsBuilder.Options)) {
-                var requestRepository = new RequestManager(context);
-                var realR = await requestRepository.Get(request.RequestId);
-            
-                var items = request.Parameters.Select(p => new Algorithm.Item {Value = p.Price, Weight = p.Weight}).ToArray();
-                var answer = Algorithm.Knapsack(items, request.Capacity);
-                
-                request.Status = true;
-                request.Answer = answer;
-                request.Percentage = 100;
-                await requestRepository.Update(realR, request);
-            }
+            await Algorithm.Knapsack(_optionsBuilder.Options, request);
         }
         
         protected override void Dispose(bool disposing) {

@@ -16,6 +16,12 @@ export class RequestList extends Component {
     this.onDeleteButtonClicked = this.onDeleteButtonClicked.bind(this);
 
     this.updateTable();
+
+    this.timer = setInterval(() => this.updateTable(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   updateTable() {
@@ -29,6 +35,18 @@ export class RequestList extends Component {
   onDeleteButtonClicked(id) {
     fetch('api/SampleData/DeleteRequest', {
       method: 'DELETE',
+      body: id,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(this.updateTable)
+      .catch(error => console.error(error))
+  }
+
+  onRenewTaskButtonClicked(id) {
+    fetch('api/SampleData/RenewRequest', {
+      method: 'POST',
       body: id,
       headers: {
         "Content-Type": "application/json"
@@ -66,7 +84,9 @@ export class RequestList extends Component {
                 </button>
               </td>
               <td>
-                <button type="button" className="btn btn-primary">Новая задача</button>
+                <button type="button" className="btn btn-primary" onClick={_ => this.onRenewTaskButtonClicked(request.requestId)}>
+                  Новая задача
+                </button>
               </td>
             </tr>
           )}
